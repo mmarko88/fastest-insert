@@ -21,7 +21,7 @@ public final class Person {
     @Column(name = PersonConstants.FIRST_NAME, nullable = false, length = PersonConstants.FIRST_NAME_LENGTH, columnDefinition = PersonConstants.FIRST_NAME_COL_DEF)
     private String firstName;
     @Column(name = PersonConstants.LAST_NAME, nullable = false, length = PersonConstants.LAST_NAME_LENGTH, columnDefinition = PersonConstants.LAST_NAME_COL_DEF)
-    String lastName;
+    private String lastName;
     @Column(name = PersonConstants.YEARS, columnDefinition = PersonConstants.YEARS_COL_DEF)
     private int years;
 //    @Column(name = PersonConstants.CREATION_DATE, columnDefinition = PersonConstants.CREATION_DATE_COL_DEF)

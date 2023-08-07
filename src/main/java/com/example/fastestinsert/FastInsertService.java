@@ -20,10 +20,7 @@ public class FastInsertService {
 
     private final PersonPersistService personPersistService;
 
-    private static final DecimalFormat decimalFormat = new DecimalFormat("#,###.###");
-
-
-    private static Date generateRandomDate(Date minDate, Date maxDate) {
+    public static Date generateRandomDate(Date minDate, Date maxDate) {
         long minMillis = minDate.getTime();
         long maxMillis = maxDate.getTime();
         long randomMillis = ThreadLocalRandom.current().nextLong(minMillis, maxMillis);

@@ -6,7 +6,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import static com.example.fastestinsert.FastInsertService.generateRandomDate;
 
 public class RandomPersonGenerator {
     private static int personId = 0;
