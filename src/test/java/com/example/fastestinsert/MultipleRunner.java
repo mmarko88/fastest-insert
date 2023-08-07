@@ -5,6 +5,7 @@ import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -22,6 +23,9 @@ public class MultipleRunner {
     @Autowired
     private TestResultService testResultService;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     public void execJob(int bindParamCount,
                         String testName,
                         FastestInsertApplicationTests.TestParam param,
@@ -29,6 +33,8 @@ public class MultipleRunner {
         long duration;
         for (int i = 0; i < repetitions; i++) {
             fastInsertService.cleanUpPeopleTable();
+            jdbcTemplate.execute("DBCC SHRINKFILE ('testdb_log', 1024)");
+
             long startTime = System.currentTimeMillis();
             job.accept(null);
             duration = System.currentTimeMillis() - startTime;

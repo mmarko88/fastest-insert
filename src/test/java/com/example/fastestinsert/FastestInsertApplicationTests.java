@@ -6,9 +6,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -146,8 +148,8 @@ class FastestInsertApplicationTests {
 //        int[] noOfPeople = {10, 1000, 10_000, 100_000, 1_000_000};
 //        int[] batchSizes = {100, 500, 1_000, 10_000};
 
-        int[] noOfPeople = {10_000_000};
-        int[] batchSizes = {10_000};
+        int[] noOfPeople = {10_000, 100_000, 1_000_000, 10_000_000};
+        int[] batchSizes = {1000, 10_000};
 
         for (int noOfPerson : noOfPeople) {
             List<Person> people = RandomPersonGenerator.generateRandomPersons(noOfPerson);

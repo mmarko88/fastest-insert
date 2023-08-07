@@ -31,7 +31,10 @@ public class FastInsertService {
     private final PersonRepository personRepository;
 
     public void cleanUpPeopleTable() {
-        entityManager.createNativeQuery("truncate table person").executeUpdate();
+        entityManager
+                .createNativeQuery("truncate table person")
+                .executeUpdate();
+
         entityManager.clear();
     }
 
