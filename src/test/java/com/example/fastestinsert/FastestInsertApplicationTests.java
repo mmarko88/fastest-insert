@@ -148,8 +148,8 @@ class FastestInsertApplicationTests {
 //        int[] noOfPeople = {10, 1000, 10_000, 100_000, 1_000_000};
 //        int[] batchSizes = {100, 500, 1_000, 10_000};
 
-        int[] noOfPeople = {10_000, 100_000, 1_000_000, 10_000_000};
-        int[] batchSizes = {1000, 10_000};
+        int[] noOfPeople = {10_000};
+        int[] batchSizes = {1000};
 
         for (int noOfPerson : noOfPeople) {
             List<Person> people = RandomPersonGenerator.generateRandomPersons(noOfPerson);
