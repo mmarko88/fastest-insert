@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -19,6 +18,7 @@ public class FastInsertService {
     private EntityManager entityManager;
 
     private final PersonPersistService personPersistService;
+    private final ChunkEntityPersistRepository chunkEntityPersistRepository;
 
     public static Date generateRandomDate(Date minDate, Date maxDate) {
         long minMillis = minDate.getTime();
@@ -26,9 +26,6 @@ public class FastInsertService {
         long randomMillis = ThreadLocalRandom.current().nextLong(minMillis, maxMillis);
         return new Date(randomMillis);
     }
-
-
-    private final PersonRepository personRepository;
 
     public void cleanUpPeopleTable() {
         entityManager
@@ -38,38 +35,20 @@ public class FastInsertService {
         entityManager.clear();
     }
 
-    public void insertPeopleSaveAllBatched(List<Person> people) {
-        personRepository.saveAll(people);
-        entityManager.flush();
-        entityManager.clear();
+    public void insertPeopleBulkInsert(int batchSize, int objectsPerInsert, List<Person> people) {
+        personPersistService.persistPeople(people, batchSize, objectsPerInsert);
     }
 
-    public void insertPeoplePersist(List<Person> people) {
-        for (Person p : people) {
-            entityManager.persist(p);
-        }
-
-        entityManager.flush();
-        entityManager.clear();
-
+    public void insertPeopleSpringTemplateBulkInsert(int batchSize, int objectsPerInsert, List<Person> people) {
+        personPersistService.persistPeopleSpringTemplate(people, batchSize, objectsPerInsert);
     }
 
-    public void insertPeoplePersistInChunks(int chunkSize, List<Person> people) {
-        for (int i = 0; i < people.size(); i++) {
-            Person p = people.get(i);
-            entityManager.persist(p);
-            if ((i + 1) % chunkSize == 0) {
-                entityManager.flush();
-                entityManager.clear();
-            }
-        }
-
-        entityManager.flush();
-        entityManager.clear();
+    public void persistPeopleBulkApi(List<Person> people, int batchSize) {
+        personPersistService.persistPeopleBulkApi(people, batchSize);
     }
 
-    public void insertPeoplePersistPersistService(int batchSize, int maxBindValues, List<Person> people) {
-        personPersistService.persistPeople(people, batchSize, maxBindValues);
+    public void persistPeopleHibernateFlush(List<Person> people, int batchSize) {
+        chunkEntityPersistRepository.persistAndFlushInChunks(people, batchSize);
     }
 
 }

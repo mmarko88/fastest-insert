@@ -1,10 +1,7 @@
 package com.example.fastestinsert;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +11,7 @@ import java.util.function.Consumer;
 @Service
 @Slf4j
 public class MultipleRunner {
-    @Value("${perftest.reprtitions:5}")
-    private int repetitions;
+    private static final int repetitions = 10;
 
     @Autowired
     private FastInsertService fastInsertService;
@@ -26,9 +22,8 @@ public class MultipleRunner {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public void execJob(int bindParamCount,
-                        String testName,
-                        FastestInsertApplicationTests.TestParam param,
+    public void execJob(String testName,
+                        TestParam param,
                         Consumer<Void> job) {
         long duration;
         for (int i = 0; i < repetitions; i++) {
@@ -43,11 +38,11 @@ public class MultipleRunner {
                     testName,
                     new Date(),
                     duration,
-                    param.people().size(),
-                    param.batchSize(),
-                    bindParamCount,
+                    param.getPeople().size(),
+                    param.getBatchSize(),
+                    param.getObjectsPerInsert(),
                     i,
-                    param.testStartDate()
+                    param.getTestStartDate()
             );
             testResultService.save(tr);
         }

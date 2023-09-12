@@ -21,13 +21,18 @@ public class RandomPersonGenerator {
         return people;
     }
     private static Person genPerson() {
-        Calendar minDate = Calendar.getInstance();
-        minDate.set(1900, Calendar.JANUARY, 1);
-
-        return new Person(++personId,
+//        Calendar minDate = Calendar.getInstance();
+//        minDate.set(1900, Calendar.JANUARY, 1);
+        ++personId;
+//        int addedValue = 555555555;
+        return new Person(personId,
+//                    "uName:" + personId,
                 RandomStringUtils.randomAlphanumeric(PersonConstants.USERNAME_LENGTH),
+//                    "fName:" + personId,
+//                    "lName:" + personId,
                 RandomStringUtils.randomAlphabetic(PersonConstants.FIRST_NAME_LENGTH),
                 RandomStringUtils.randomAlphabetic(PersonConstants.LAST_NAME_LENGTH),
+//                (personId) + addedValue
                 RandomUtils.nextInt(10, 100)
 //                generateRandomDate(minDate.getTime(),new Date())
         );

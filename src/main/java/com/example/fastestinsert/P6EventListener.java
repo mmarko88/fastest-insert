@@ -15,9 +15,9 @@ public class P6EventListener extends JdbcEventListener {
 
     @Override
     public void onBeforeExecuteBatch(StatementInformation statementInformation) {
-        int length = statementInformation.getSqlWithValues().length();
-        String sql = statementInformation.getSql();
-        System.out.println("statementInformation = " + statementInformation.getSqlWithValues());
+//        int length = statementInformation.getSqlWithValues().length();
+//        String sql = statementInformation.getSql();
+//        System.out.println("statementInformation = " + statementInformation.getSqlWithValues());
         super.onBeforeExecuteBatch(statementInformation);
     }
 }

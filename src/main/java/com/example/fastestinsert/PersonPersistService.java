@@ -11,8 +11,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class PersonPersistService {
-    private final TempTablePersistService<Person> tempTablePersistService;
-    public static final TableDescriptor<Person> PERSON_TABLE_DESCRIPTOR =
+    private final BulkPersistCustomRepository bulkPersistCustomRepository;
+    private final SpringTemplateBulkInsertRepository springTemplateBulkInsertRepository;
+    private final BulkCopyRepository bulkCopyRepository;
+    private static final TableDescriptor<Person> PERSON_TABLE_DESCRIPTOR =
             TableDescriptor.of(PersonConstants.PERSON_TABLE_NAME,
                     Arrays.asList(
                             ColumnDescriptor.of(PersonConstants.PERSON_ID, PersonConstants.PERSON_ID_COL_DEF, Types.INTEGER, Person::getPersonId),
@@ -24,7 +26,18 @@ public class PersonPersistService {
                     ), List.of(PersonConstants.PERSON_ID));
 
     @Transactional
-    public void persistPeople(List<Person> people, double BATCH_SIZE, int MAX_BIND_VALUES) {
-        tempTablePersistService.insertEntities(people, PERSON_TABLE_DESCRIPTOR, MAX_BIND_VALUES, BATCH_SIZE);
+    public void persistPeople(List<Person> people, int batchSize, int objectsPerInsert) {
+        bulkPersistCustomRepository.insert(people, PERSON_TABLE_DESCRIPTOR, batchSize, objectsPerInsert);
     }
+
+    @Transactional
+    public void persistPeopleSpringTemplate(List<Person> people, int batchSize, int objectsPerInsert) {
+        springTemplateBulkInsertRepository.insertPeople(PERSON_TABLE_DESCRIPTOR, people, batchSize, objectsPerInsert);
+    }
+
+    @Transactional
+    public void persistPeopleBulkApi(List<Person> people, int batchSize) {
+        bulkCopyRepository.performBulkInsert(people, PERSON_TABLE_DESCRIPTOR, batchSize);
+    }
+
 }

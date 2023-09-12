@@ -1,14 +1,14 @@
 package com.example.fastestinsert;
 
-import com.microsoft.sqlserver.jdbc.*;
+import com.microsoft.sqlserver.jdbc.SQLServerBulkCopy;
+import com.microsoft.sqlserver.jdbc.SQLServerBulkCopyOptions;
+import com.microsoft.sqlserver.jdbc.SQLServerConnection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import javax.sql.RowSetMetaData;
 import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.RowSetFactory;
@@ -19,17 +19,13 @@ import java.util.List;
 
 @Service
 @Transactional
-public class BulkCopyService {
-
-    @Autowired
-    private DataSource dataSource;
-
+public class BulkCopyRepository {
     @PersistenceContext
     EntityManager entityManager;
 
     public void performBulkInsert(List<Person> persons,
                                   TableDescriptor<Person> descriptor,
-                                  int batchSize) throws SQLException {
+                                  int batchSize) {
         Session unwrap = entityManager.unwrap(Session.class);
 
         unwrap.doWork((connection) -> {
@@ -48,7 +44,7 @@ public class BulkCopyService {
         });
     }
 
-private CachedRowSet createCachedRowSet(List<Person> persons, TableDescriptor<Person> descriptor) throws SQLException {
+    private CachedRowSet createCachedRowSet(List<Person> persons, TableDescriptor<Person> descriptor) throws SQLException {
         RowSetFactory factory = RowSetProvider.newFactory();
         CachedRowSet rowSet = factory.createCachedRowSet();
 
@@ -58,7 +54,7 @@ private CachedRowSet createCachedRowSet(List<Person> persons, TableDescriptor<Pe
             rowSet.moveToInsertRow();
             for (int i = 0; i < descriptor.getColumns().size(); i++) {
                 ColumnDescriptor<Person> column = descriptor.getColumns().get(i);
-                rowSet.updateObject(i + 1, column.getEntityFieldValue(person), column.getSqlType());
+                rowSet.updateObject(i + 1, column.getObjectFieldValue(person), column.getSqlType());
             }
             rowSet.insertRow();
         }
@@ -66,6 +62,7 @@ private CachedRowSet createCachedRowSet(List<Person> persons, TableDescriptor<Pe
         rowSet.moveToCurrentRow();
         return rowSet;
     }
+
     private static RowSetMetaData createMetadata(TableDescriptor<Person> descriptor) throws SQLException {
         RowSetMetaData metadata = new RowSetMetaDataImpl();
 
@@ -75,7 +72,6 @@ private CachedRowSet createCachedRowSet(List<Person> persons, TableDescriptor<Pe
             metadata.setColumnName(i + 1, descriptor.getColumns().get(i).getColumnName());
             metadata.setColumnType(i + 1, descriptor.getColumns().get(i).getSqlType());
         }
-
         return metadata;
     }
 }

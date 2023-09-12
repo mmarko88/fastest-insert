@@ -23,13 +23,13 @@ public class TestResult {
     @Column
     private Date creationDate;
     @Column
-    private long duration;
+    private long durationMs;
     @Column
-    private int noOfInserts;
+    private int totalNoOfPeople;
     @Column
     private int batchSize;
     @Column
-    private int bindParamCount;
+    private int noOfPeoplePerInsert;
     @Column
     private int repetition;
     @Column
