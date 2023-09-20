@@ -71,7 +71,7 @@ class FastestInsertApplicationTests {
         List<TestParam> params = new ArrayList<>();
         Date startDate = new Date();
         int[] noOfPeople = {1, 10, 100, 400};
-        int[] batchSizes = {10, 100, 1_000, 10_000};
+        int[] batchSizes = {10, 100, 1_000, 5_000};
 
 //        int[] noOfPeople = {1};
 //        int[] batchSizes = {1};
